@@ -1,0 +1,30 @@
+{
+  "name": "someprojectapi",
+  "version": "1.0.0",
+  "description": "An API rest to handle movies, music and videogames",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon -r dotenv/config server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SebDev79x/SomeProjectAPI.git"
+  },
+  "author": "Sébastien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SebDev79x/SomeProjectAPI/issues"
+  },
+  "homepage": "https://github.com/SebDev79x/SomeProjectAPI#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.25.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
