@@ -5,10 +5,9 @@ const bcrypt = require('bcrypt')
 
 /* RECUPERATION DU ROUTEUR EXPRESS */
 let router = express.Router()
-
 /* ROUTAGE de la ressource User */
 // Récupérer ALL USERS
-router.get('', (req, res) => {
+router.get('',(req, res) => {
     User.findAll()
         .then(users => {
            return res.json({ data: users })
@@ -54,13 +53,13 @@ router.put('', (req, res) => {
         .then(user => {
             // Vérification utilisateur, existe déjà ou pas ?
             console.log("user",user);
-            /* if(user !== null){
+            if(user !== null){
                 console.log("user",user);
                 console.log("user.email",user.email);
 
                 console.log("email",email);
                 return res.status(409).json({ message: `Adresse existe déjà Carpentier ${email } !` })
-            } */
+            }
             // Hash du password, on le sale + hash
             // Carotte =>
             // Cryptage : 4 morceaux, on peut retrouver l'ordre et tout remettre en place
@@ -76,7 +75,7 @@ router.put('', (req, res) => {
                 .catch(err => res.status(500).json({ message: 'Le H est mauvais Carpentier !', error: err }))
 
         })
-        .catch(err => res.status(500).json({ message: 'Erreur PB CREATION', error: err }))
+        .catch(err => res.status(500).json({ message: 'Erreur PB CREATION UTILISATEUR', error: err }))
 })
 // Pour modifier
 router.patch('/:id', (req, res) => {

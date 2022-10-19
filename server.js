@@ -1,6 +1,8 @@
 /* IMPORT DES MODULES NECESSAIRES */
 const express = require('express')
 const cors = require('cors')
+const checkTokenMiddleWare = require('./jsonwebtoken/checkJWT')
+
 /* IMPORT CONNEXION Bdd */
 let DB = require('./db.config')
 /* INIT DE L'API */
@@ -14,11 +16,18 @@ app.use(express.urlencoded({ extended: true }))
 /* IMPORT DES MODULES DE ROUTAGE */
 // On se branche
 const user_router = require('./routes/users')
+const movie_router = require('./routes/movies')
+const auth_router = require('./routes/auth')
+
 /* const movie_router = require('./routes/movies')
  */
 /* Mise en place du ROUTAGE */
 app.get('/', (req, res) => res.send('Youpi ! ONLINE oui !'))
-app.use('/users',user_router)
+// Ici on a fermé toutes les routes USER via checkTokenMiddleWare
+app.use('/users', checkTokenMiddleWare,user_router)
+app.use('/auth',auth_router)
+app.use('/movies',movie_router)
+
 /* app.use('/movies',movie_router)
  */
 app.get('*', (req, res) => res.status(501).send('c\'est quoi c\' bordel Carpentier !?? URL inexistante'))
