@@ -9,19 +9,19 @@ const app = express()
 app.use(cors())
 /* API en json */
 app.use(express.json())
-/* Multiples endpoints */
+/* Multiples endpoints, UTILISER urlencoded dans POSTMAN */
 app.use(express.urlencoded({ extended: true }))
 /* IMPORT DES MODULES DE ROUTAGE */
 // On se branche
 const user_router = require('./routes/users')
-const movie_router = require('./routes/movies')
-
+/* const movie_router = require('./routes/movies')
+ */
 /* Mise en place du ROUTAGE */
-app.get('/', (req, res) => res.send('Youpi ! oui !'))
+app.get('/', (req, res) => res.send('Youpi ! ONLINE oui !'))
 app.use('/users',user_router)
-app.use('/movies',movie_router)
-
-app.get('*', (res, req) => res.status(501).send('c\'est quoi c\' bordel Carpentier !??'))
+/* app.use('/movies',movie_router)
+ */
+app.get('*', (req, res) => res.status(501).send('c\'est quoi c\' bordel Carpentier !?? URL inexistante'))
 
 /* DEMARRAGE SERVEUR avec test db */
 DB.authenticate()
