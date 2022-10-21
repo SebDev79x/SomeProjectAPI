@@ -2,6 +2,7 @@
 /* MODELE = représentation de l'objet de façon unitaire */
 const { DataTypes } = require('sequelize')
 const DB = require('../db.config')
+const bcrypt = require('bcrypt')
 
 /* DEFINITION DU MODELE USER */
 const User = DB.define('User', {
@@ -37,6 +38,13 @@ const User = DB.define('User', {
     }
 }, { paranoid: true }) // softDelete
 
+User.beforeCreate(async(user,options)=>{
+    let hash = await bcrypt.hash(user.password, parseInt(process.env.BCRYPT_SALT_ROUND))
+    user.password = hash
+})
+User.checkPassword = async (password,passwordInDb) =>{
+    return  await bcrypt.compare(password, passwordInDb)
+}
 /* Synchronisation du modèle */
 /* User.sync()
  *//* User.sync({force:true})

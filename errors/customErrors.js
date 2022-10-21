@@ -14,8 +14,9 @@ class MainError extends Error {
         console.log("(this.constructor.name", this.constructor.name);
         switch (this.constructor.name) {
             case 'AuthError':
-                this.errorType == 0 ? this.statusCode = 404 : this.statusCode = 409
-                break
+/*                 this.errorType == 0 ? this.statusCode = 400 : this.statusCode = 401 */ 
+this.errorType == 0 ? this.statusCode = 400 : this.errorType == 1 ? this.statusCode = 404 : this.statusCode = 401
+               break
             case 'UserError':
                 this.errorType == 0 ? this.statusCode = 404 : this.statusCode = 409
 

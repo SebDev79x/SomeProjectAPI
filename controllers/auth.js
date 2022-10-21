@@ -1,6 +1,5 @@
 /* IMPORT MODULES NECESSAIRES */
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { RequestError, AuthError } = require('../errors/customErrors')
 
@@ -12,17 +11,18 @@ exports.loginUser = async (req, res, next) => {
         // Validation données reçues, existent-elles ?
         console.log(email, password);
         if (!email || !password) {
-            throw new AuthError('Email ou mot de passe incorrect',0)
+            throw new AuthError('Email ou mot de passe incorrect/ ou non valide',0)
         }
         // Vérification existence utilisateur
-        let user = await User.findOne({ where: { emaill: email }, raw: true })
+        let user = await User.findOne({ where: { email: email }, raw: true })
         if (user === null) {
             throw new AuthError('Ce compte n\existe pas',1)
         }
         // Vérification mot de passe
-        let test = await bcrypt.compare(password, user.password)
-        if (!test) {
-            throw new AuthError('Mot de passe inconnu',2)
+        let test = await User.checkPassword(password,user.password)
+/*         let test = await bcrypt.compare(password, user.password)
+ */        if (!test) {
+            throw new AuthError('Mauvais mot de passe',2)
         }
         // Génération TOKEN
         const token = jwt.sign({

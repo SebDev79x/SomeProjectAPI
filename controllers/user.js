@@ -28,7 +28,7 @@ exports.getUser = (req, res) => {
         .catch(err => next(err))
 }
 // Pour ajouter/créer (et non post, car RESTFUL)
-exports.addUser = (req, res) => {
+exports.addUser = async (req, res) => {
     // Isolation des variables de l'objet
     const { firstname, lastname, username, email, password } = req.body
     console.log("re.body", req.body);
@@ -36,29 +36,29 @@ exports.addUser = (req, res) => {
     if (!firstname || !lastname || !username || !email || !password) {
         throw new RequestError('Paramètre manquant')
     }
-    // {where:{email 1:email 2} => email 1 vient de Bdd, email 2 vient de la requête
-    User.findOne({ where: { email: email }, raw: true })
-        .then(user => {
-            // Vérification utilisateur, existe déjà ou pas ?
-            console.log("user", user);
-            if (user !== null) {
-                throw new UserError('Cet utilisateur existe déjà Carpentier !')
-            }
-            // Hash du password, on le sale + hash
-            // Carotte =>
-            // Cryptage : 4 morceaux, on peut retrouver l'ordre et tout remettre en place
-            // Hashage : râpée, clairement plus compliqué de la restituer
-            bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUND))
-                .then(hash => {
-                    req.body.password = hash
-                    // Création utilisateur
-                    User.create(req.body)
-                        .then(user => res.json({ message: 'Utilisateur créé', data: user }))
-                        .catch(err => next(err))
-                })
-                .catch(err => next(err))
-        })
-        .catch(err => next(err))
+    try {
+        // {where:{email 1:email 2} => email 1 vient de Bdd, email 2 vient de la requête
+        const user = await User.findOne({ where: { email: email }, raw: true })
+        // Vérification utilisateur, existe déjà ou pas ?
+        console.log("user", user);
+        if (user !== null) {
+            throw new UserError('Cet utilisateur existe déjà Carpentier !')
+        }
+        // Hash du password, on le sale + hash
+        // Carotte =>
+        // Cryptage : 4 morceaux, on peut retrouver l'ordre et tout remettre en place
+        // Hashage : râpée, clairement plus compliqué de la restituer
+        /* let hash = bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUND))
+
+        req.body.password = hash */
+        // Création utilisateur
+        let userCreated = await User.create(req.body)
+        return res.json({ message: 'Utilisateur créé', data: userCreated })
+
+
+    } catch (err) {
+        next(err)
+    }
 }
 // Pour modifier
 exports.updateUser = (req, res) => {
@@ -71,7 +71,7 @@ exports.updateUser = (req, res) => {
     User.findOne({ where: { id: userId }, raw: true })
         .then(user => {
             if (user === null) {
-                throw new UserError('Cet utilisateur n\'existe pas Carpentier !',0)
+                throw new UserError('Cet utilisateur n\'existe pas Carpentier !', 0)
             }
             User.update(req.body, { where: { id: userId } })
                 .then(user => res.json({ message: 'Utilisateur mis à jour', data: user }))
