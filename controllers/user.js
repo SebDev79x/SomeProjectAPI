@@ -7,7 +7,7 @@ const { RequestError, UserError } = require('../errors/customErrors')
 // Récupérer TOUS LES UTILISATEURS
 exports.getAllUsers = (req, res, next) => {
     User.findAll()
-        .then(users => res.json({ data: users }))
+        .then(users => res.json({data:users}))
         .catch(err => next(err)) // Erreur interne
 }
 // Récupérer 1 utilisateur

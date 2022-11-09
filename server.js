@@ -32,7 +32,7 @@ app.use('/movies',movie_router)
 /* app.use('/movies',movie_router)
  */
 
-app.get('*', (req, res) => res.status(501).send('c\'est quoi c\' bordel Carpentier !?? URL inexistante'))
+app.get('*', (req, res) => res.status(501).send('URL inexistante'))
 app.use(handleErrors)
 /* DEMARRAGE SERVEUR avec test db */
 DB.authenticate()
